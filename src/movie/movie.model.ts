@@ -1,7 +1,8 @@
-import { AllowNull, Column, Model, Table } from 'sequelize-typescript';
+import { Column, HasMany, Model, Table } from 'sequelize-typescript';
+import { ReviewModel } from 'src/review/review.model';
 
 @Table({ tableName: 'Movie', deletedAt: false, version: false })
-export class MovieModel extends Model {
+export class MovieModel extends Model<MovieModel> {
 	@Column({ unique: true })
 	name: string;
 
@@ -14,4 +15,7 @@ export class MovieModel extends Model {
 	/* reviews?: IReview[] */
 	@Column({ defaultValue: 0 })
 	fees: number;
+
+	@HasMany(() => ReviewModel)
+	reviews: ReviewModel[];
 }

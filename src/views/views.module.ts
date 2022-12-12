@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ViewsService } from './views.service';
 import { ViewsController } from './views.controller';
+import { SequelizeModule } from '@nestjs/sequelize/dist';
+import { ViewsModel } from './views.model';
 
 @Module({
-  controllers: [ViewsController],
-  providers: [ViewsService]
+	imports: [SequelizeModule.forFeature([ViewsModel])],
+	controllers: [ViewsController],
+	providers: [ViewsService]
 })
 export class ViewsModule {}
