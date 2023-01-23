@@ -14,6 +14,7 @@ export class ViewsService {
 	async updateViews(movieId: number) {
 		const row = await this.viewsModel.findOne({
 			where: {
+				movieId,
 				[Op.and]: [
 					fn('EXTRACT(MONTH from "createdAt")=', dayjs().get('month') + 1)
 				]
