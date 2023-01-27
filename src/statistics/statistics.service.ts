@@ -5,6 +5,29 @@ import { MovieModel } from '../movie/movie.model';
 import { ReviewModel } from '../review/review.model';
 import { ViewsModel } from '../views/views.model';
 import { IStatisticItem } from './statistics.interface';
+import * as dayjs from 'dayjs';
+import * as updateLocale from 'dayjs/plugin/updateLocale';
+import * as customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(updateLocale);
+dayjs.extend(customParseFormat);
+
+dayjs.updateLocale('en', {
+	months: [
+		'January',
+		'February',
+		'March',
+		'April',
+		'May',
+		'June',
+		'July',
+		'August',
+		'September',
+		'October',
+		'November',
+		'December'
+	]
+});
 
 @Injectable()
 export class StatisticsService {
@@ -29,10 +52,19 @@ export class StatisticsService {
 				[fn('sum', col('views')), 'views'],
 				[fn('date_trunc', 'month', col('createdAt')), 'month']
 			],
-			group: 'month'
+			group: 'month',
+			order: [[col('month'), 'ASC']],
+			raw: true
 		});
 
-		return { totalFees, viewsByMonth };
+		return {
+			totalFees,
+			viewsByMonth: viewsByMonth.map((item) => ({
+				...item,
+				// @ts-ignore
+				month: dayjs(item.month).format('MMM')
+			}))
+		};
 	}
 
 	async getMainStatistics(): Promise<IStatisticItem[]> {
